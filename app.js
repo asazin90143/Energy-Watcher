@@ -62,10 +62,40 @@ sortBtn.onclick = () => {
     render();
 };
 
+// Export Logic
+const exportBtn = document.createElement('button');
+exportBtn.className = "mb-2 mr-2 px-3 py-1 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700 transition float-right shadow-sm";
+exportBtn.innerText = "Export CSV";
+
+exportBtn.onclick = () => {
+    if (appliances.length === 0) {
+        alert("No data to export!");
+        return;
+    }
+
+    const headers = ["Name,Wattage (W),Hours/Day,Monthly Cost ($)"];
+    const rows = appliances.map(item => {
+        const cost = calculateMonthlyCost(item.wattage, item.hours);
+        const name = `"${item.name.replace(/"/g, '""')}"`;
+        return `${name},${item.wattage},${item.hours},${cost.toFixed(2)}`;
+    });
+
+    const csvContent = [headers, ...rows].join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "energy_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
+
 const table = list.closest('table');
 if (table) {
     // Insert button before the table
     table.parentNode.insertBefore(sortBtn, table);
+    table.parentNode.insertBefore(exportBtn, table);
 }
 
 const save = () => {
