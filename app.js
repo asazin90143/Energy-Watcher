@@ -32,19 +32,31 @@ const render = () => {
         grandTotal += monthlyCost;
 
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-gray-50 transition";
+        tr.className = "hover:bg-blue-50 transition duration-200 fade-in group";
         tr.innerHTML = `
-            <td class="p-4 border-b font-medium">${item.name}<br><span class="text-xs text-gray-400">${item.wattage}W | ${item.hours}h/day</span></td>
-            <td class="p-4 border-b text-center font-bold text-blue-600">$${(monthlyCost / 30).toFixed(2)}</td>
-            <td class="p-4 border-b text-right space-x-2">
-                <button onclick="editItem(${index})" class="text-blue-500 hover:underline">Edit</button>
-                <button onclick="deleteItem(${index})" class="text-red-500 hover:underline">Delete</button>
+            <td class="p-4 border-b">
+                <div class="font-semibold text-gray-800">${item.name}</div>
+                <div class="text-xs text-gray-500 mt-1">${item.wattage}W | ${item.hours}h/day</div>
+            </td>
+            <td class="p-4 border-b text-center">
+                <div class="font-bold text-blue-600">$${(monthlyCost / 30).toFixed(2)}</div>
+                <div class="text-[10px] text-gray-400 uppercase tracking-wider">Daily</div>
+            </td>
+            <td class="p-4 border-b text-right">
+                <div class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button data-action="edit" data-index="${index}" class="p-2 text-blue-500 hover:bg-blue-100 rounded-full transition" title="Edit">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </button>
+                    <button data-action="delete" data-index="${index}" class="p-2 text-red-500 hover:bg-red-100 rounded-full transition" title="Delete">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
             </td>
         `;
         list.appendChild(tr);
     });
 
-    totalDisplay.innerText = `Monthly Total: $${grandTotal.toFixed(2)}`;
+    totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-gray-800">$${grandTotal.toFixed(2)}</span>`;
     updateChart();
 };
 
@@ -62,7 +74,8 @@ const updateChart = () => {
             datasets: [{
                 label: 'Daily Wh Consumption',
                 data: data,
-                backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']
+                backgroundColor: ['#60A5FA', '#34D399', '#FBBF24', '#F87171', '#A78BFA', '#F472B6'],
+                borderWidth: 0
             }]
         },
         options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
@@ -108,6 +121,14 @@ const editItem = (i) => {
 rateInput.addEventListener('input', (e) => {
     kwhRate = parseFloat(e.target.value) || 0;
     save();
+});
+
+list.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const { action, index } = btn.dataset;
+    if (action === 'edit') editItem(parseInt(index));
+    if (action === 'delete') deleteItem(parseInt(index));
 });
 
 render();
