@@ -2,6 +2,7 @@
 let appliances = JSON.parse(localStorage.getItem('energyWatcher_data')) || [];
 let kwhRate = localStorage.getItem('energyWatcher_rate') || 0.15;
 let isDark = localStorage.getItem('energyWatcher_theme') === 'dark';
+let sortOrder = 'original';
 let myChart = null;
 
 // DOM Elements
@@ -42,6 +43,31 @@ const applyTheme = () => {
 };
 applyTheme();
 
+// Sort Logic
+const sortBtn = document.createElement('button');
+sortBtn.className = "mb-2 px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition float-right";
+sortBtn.innerText = "Sort: Default";
+
+sortBtn.onclick = () => {
+    if (sortOrder === 'original') {
+        sortOrder = 'desc';
+        sortBtn.innerText = "Sort: High to Low";
+    } else if (sortOrder === 'desc') {
+        sortOrder = 'asc';
+        sortBtn.innerText = "Sort: Low to High";
+    } else {
+        sortOrder = 'original';
+        sortBtn.innerText = "Sort: Default";
+    }
+    render();
+};
+
+const table = list.closest('table');
+if (table) {
+    // Insert button before the table
+    table.parentNode.insertBefore(sortBtn, table);
+}
+
 const save = () => {
     localStorage.setItem('energyWatcher_data', JSON.stringify(appliances));
     localStorage.setItem('energyWatcher_rate', kwhRate);
@@ -57,7 +83,17 @@ const render = () => {
     list.innerHTML = '';
     let grandTotal = 0;
 
-    appliances.forEach((item, index) => {
+    // Create a mapped array to preserve original indices for editing/deleting
+    let displayItems = appliances.map((item, index) => ({ ...item, originalIndex: index }));
+
+    if (sortOrder === 'desc') {
+        displayItems.sort((a, b) => (b.wattage * b.hours) - (a.wattage * a.hours));
+    } else if (sortOrder === 'asc') {
+        displayItems.sort((a, b) => (a.wattage * a.hours) - (b.wattage * b.hours));
+    }
+
+    displayItems.forEach((item) => {
+        const index = item.originalIndex; // Use original index for actions
         const monthlyCost = calculateMonthlyCost(item.wattage, item.hours);
         grandTotal += monthlyCost;
 
