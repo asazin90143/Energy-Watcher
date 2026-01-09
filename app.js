@@ -132,6 +132,16 @@ form.addEventListener('submit', (e) => {
         hours: parseFloat(document.getElementById('hours').value)
     };
 
+    if (isNaN(newItem.wattage) || newItem.wattage <= 0 || isNaN(newItem.hours) || newItem.hours <= 0) {
+        alert('Please enter valid positive numbers for Wattage and Hours.');
+        return;
+    }
+
+    if (newItem.hours > 24) {
+        alert('Daily usage cannot exceed 24 hours.');
+        return;
+    }
+
     if (editIndex > -1) {
         appliances[editIndex] = newItem;
     } else {
