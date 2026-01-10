@@ -91,11 +91,26 @@ exportBtn.onclick = () => {
     document.body.removeChild(link);
 };
 
+// Clear All Logic
+const clearBtn = document.createElement('button');
+clearBtn.className = "mb-2 mr-2 px-3 py-1 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition float-right shadow-sm";
+clearBtn.innerText = "Clear All";
+
+clearBtn.onclick = () => {
+    if (appliances.length === 0) return;
+
+    if (confirm("Are you sure you want to delete all appliances?")) {
+        appliances = [];
+        save();
+    }
+};
+
 const table = list.closest('table');
 if (table) {
     // Insert button before the table
     table.parentNode.insertBefore(sortBtn, table);
     table.parentNode.insertBefore(exportBtn, table);
+    table.parentNode.insertBefore(clearBtn, table);
 }
 
 const save = () => {
