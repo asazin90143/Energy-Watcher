@@ -30,7 +30,7 @@ body {
 }
 
 /* Dark Mode Overrides */
-.dark input, 
+.dark input,
 .dark select {
     background-color: #374151;
     color: #f3f4f6;
@@ -39,10 +39,6 @@ body {
 
 .dark ::placeholder {
     color: #9ca3af;
-}
-
-.dark .text-gray-600, .dark .text-gray-700, .dark .text-gray-800, .dark .text-gray-900 {
-    color: #e5e7eb;
 }
 
 .dark input:-webkit-autofill {
