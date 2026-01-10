@@ -27,14 +27,14 @@ const applyTheme = () => {
 
     if (isDark) {
         html.classList.add('dark');
-        document.body.classList.add('bg-gray-900', 'text-gray-100');
-        document.body.classList.remove('bg-white', 'text-gray-800');
+        document.body.classList.add('bg-gray-900');
+        document.body.classList.remove('bg-white');
         toggleBtn.innerHTML = '☀️';
         toggleBtn.className = "fixed top-4 right-4 p-3 rounded-full shadow-lg transition-transform hover:scale-110 z-50 bg-gray-800 text-yellow-400 border border-gray-700";
     } else {
         html.classList.remove('dark');
-        document.body.classList.add('bg-white', 'text-gray-800');
-        document.body.classList.remove('bg-gray-900', 'text-gray-100');
+        document.body.classList.add('bg-white');
+        document.body.classList.remove('bg-gray-900');
         toggleBtn.innerHTML = '🌙';
         toggleBtn.className = "fixed top-4 right-4 p-3 rounded-full shadow-lg transition-transform hover:scale-110 z-50 bg-white text-gray-800";
     }
@@ -146,12 +146,12 @@ const render = () => {
         tr.className = "hover:bg-blue-50 dark:hover:bg-gray-800 transition duration-200 fade-in group border-b dark:border-gray-700";
         tr.innerHTML = `
             <td class="p-4">
-                <div class="font-semibold text-gray-800 dark:text-gray-200">${item.name}</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${item.wattage}W | ${item.hours}h/day</div>
+                <div class="font-semibold text-gray-800">${item.name}</div>
+                <div class="text-xs text-gray-500 mt-1">${item.wattage}W | ${item.hours}h/day</div>
             </td>
             <td class="p-4 text-center">
-                <div class="font-bold text-blue-600 dark:text-blue-400">$${(monthlyCost / 30).toFixed(2)}</div>
-                <div class="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-wider">Daily</div>
+                <div class="font-bold text-blue-600">$${(monthlyCost / 30).toFixed(2)}</div>
+                <div class="text-[10px] text-gray-400 uppercase tracking-wider">Daily</div>
             </td>
             <td class="p-4 text-right">
                 <div class="flex justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -167,8 +167,7 @@ const render = () => {
         list.appendChild(tr);
     });
 
-    totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-gray-800 dark:text-white">$${grandTotal.toFixed(2)}</span>`;
-    totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">$${grandTotal.toFixed(2)}</span>`;
+    totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-blue-600">$${grandTotal.toFixed(2)}</span>`;
     updateChart();
 };
 
@@ -176,7 +175,7 @@ const updateChart = () => {
     const ctx = document.getElementById('energyChart').getContext('2d');
     const labels = appliances.map(a => a.name);
     const data = appliances.map(a => (a.wattage * a.hours));
-    const textColor = isDark ? '#e5e7eb' : '#374151';
+    const textColor = '#374151';
 
     if (myChart) myChart.destroy();
 
