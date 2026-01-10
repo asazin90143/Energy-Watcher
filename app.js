@@ -74,11 +74,12 @@ exportBtn.onclick = () => {
         return;
     }
 
-    const headers = ["Name,Wattage (W),Hours/Day,Monthly Cost ($)"];
+    const headers = ["Name,Wattage (W),Hours/Day,Weekly Cost ($),Monthly Cost ($)"];
     const rows = appliances.map(item => {
-        const cost = calculateMonthlyCost(item.wattage, item.hours);
+        const monthlyCost = calculateMonthlyCost(item.wattage, item.hours);
+        const weeklyCost = (monthlyCost / 30) * 7;
         const name = `"${item.name.replace(/"/g, '""')}"`;
-        return `${name},${item.wattage},${item.hours},${cost.toFixed(2)}`;
+        return `${name},${item.wattage},${item.hours},${weeklyCost.toFixed(2)},${monthlyCost.toFixed(2)}`;
     });
 
     const csvContent = [headers, ...rows].join("\n");
