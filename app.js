@@ -3,6 +3,7 @@ let appliances = JSON.parse(localStorage.getItem('energyWatcher_data')) || [];
 let kwhRate = localStorage.getItem('energyWatcher_rate') || 0.15;
 let isDark = localStorage.getItem('energyWatcher_theme') === 'dark';
 let sortOrder = 'original';
+let costPeriod = 'monthly';
 let myChart = null;
 
 // DOM Elements
@@ -105,12 +106,32 @@ clearBtn.onclick = () => {
     }
 };
 
+// Period Toggle Logic
+const periodBtn = document.createElement('button');
+periodBtn.className = "block mx-auto mt-2 text-xs font-medium text-gray-500 hover:text-blue-600 underline transition";
+periodBtn.innerText = "Switch to Weekly";
+
+periodBtn.onclick = () => {
+    if (costPeriod === 'monthly') {
+        costPeriod = 'weekly';
+        periodBtn.innerText = "Switch to Monthly";
+    } else {
+        costPeriod = 'monthly';
+        periodBtn.innerText = "Switch to Weekly";
+    }
+    render();
+};
+
 const table = list.closest('table');
 if (table) {
     // Insert button before the table
     table.parentNode.insertBefore(sortBtn, table);
     table.parentNode.insertBefore(exportBtn, table);
     table.parentNode.insertBefore(clearBtn, table);
+}
+
+if (totalDisplay) {
+    totalDisplay.parentNode.insertBefore(periodBtn, totalDisplay.nextSibling);
 }
 
 const save = () => {
@@ -126,7 +147,7 @@ const calculateMonthlyCost = (wattage, hours) => {
 
 const render = () => {
     list.innerHTML = '';
-    let grandTotal = 0;
+    let totalDailyCost = 0;
 
     // Create a mapped array to preserve original indices for editing/deleting
     let displayItems = appliances.map((item, index) => ({ ...item, originalIndex: index }));
@@ -140,7 +161,7 @@ const render = () => {
     displayItems.forEach((item) => {
         const index = item.originalIndex; // Use original index for actions
         const monthlyCost = calculateMonthlyCost(item.wattage, item.hours);
-        grandTotal += monthlyCost;
+        totalDailyCost += (monthlyCost / 30);
 
         const tr = document.createElement('tr');
         tr.className = "hover:bg-blue-50 dark:hover:bg-gray-800 transition duration-200 fade-in group border-b dark:border-gray-700";
@@ -167,7 +188,18 @@ const render = () => {
         list.appendChild(tr);
     });
 
-    totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-blue-600">$${grandTotal.toFixed(2)}</span>`;
+    let finalTotal = 0;
+    let label = "";
+
+    if (costPeriod === 'monthly') {
+        finalTotal = totalDailyCost * 30;
+        label = "Monthly Total";
+    } else {
+        finalTotal = totalDailyCost * 7;
+        label = "Weekly Total";
+    }
+
+    totalDisplay.innerHTML = `${label}: <span class="text-2xl font-bold text-blue-600">$${finalTotal.toFixed(2)}</span>`;
     updateChart();
 };
 
