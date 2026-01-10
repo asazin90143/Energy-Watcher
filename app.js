@@ -168,6 +168,7 @@ const render = () => {
     });
 
     totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-gray-800 dark:text-white">$${grandTotal.toFixed(2)}</span>`;
+    totalDisplay.innerHTML = `Monthly Total: <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">$${grandTotal.toFixed(2)}</span>`;
     updateChart();
 };
 
