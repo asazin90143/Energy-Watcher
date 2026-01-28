@@ -11,6 +11,7 @@ const form = document.getElementById('applianceForm');
 const list = document.getElementById('applianceList');
 const rateInput = document.getElementById('kwhRate');
 const totalDisplay = document.getElementById('totalCost');
+const presetSelect = document.getElementById('presetSelect');
 
 // New static elements
 const toggleBtn = document.getElementById('themeToggle');
@@ -249,7 +250,19 @@ form.addEventListener('submit', (e) => {
     form.reset();
     document.getElementById('editIndex').value = "-1";
     document.getElementById('submitBtn').innerText = "Add Appliance";
+    presetSelect.value = ""; // Reset preset
     save();
+});
+
+presetSelect.addEventListener('change', (e) => {
+    const option = e.target.selectedOptions[0];
+    if (option.value === "") return;
+
+    const name = option.dataset.name;
+    const watts = option.dataset.watts;
+
+    document.getElementById('name').value = name;
+    document.getElementById('wattage').value = watts;
 });
 
 const deleteItem = (i) => {
