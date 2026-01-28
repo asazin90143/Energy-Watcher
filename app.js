@@ -4,6 +4,7 @@ let kwhRate = localStorage.getItem('energyWatcher_rate') || 0.15;
 let isDark = localStorage.getItem('energyWatcher_theme') === 'dark';
 let sortOrder = 'original';
 let costPeriod = 'monthly';
+let budgetLimit = parseFloat(localStorage.getItem('energyWatcher_budget')) || 0;
 let myChart = null;
 
 // DOM Elements
@@ -12,6 +13,7 @@ const list = document.getElementById('applianceList');
 const rateInput = document.getElementById('kwhRate');
 const totalDisplay = document.getElementById('totalCost');
 const presetSelect = document.getElementById('presetSelect');
+const budgetInput = document.getElementById('budgetInput');
 
 // New static elements
 const toggleBtn = document.getElementById('themeToggle');
@@ -22,6 +24,7 @@ const periodBtn = document.getElementById('periodBtn');
 
 // Initialize
 rateInput.value = kwhRate;
+if (budgetLimit > 0) budgetInput.value = budgetLimit;
 
 // Theme Logic
 toggleBtn.onclick = () => {
@@ -185,7 +188,15 @@ const render = () => {
         label = "Weekly Total";
     }
 
-    totalDisplay.innerHTML = `${label}: <span class="text-2xl font-bold text-blue-600">$${finalTotal.toFixed(2)}</span>`;
+    let costColor = "text-blue-600";
+    // Only warn for monthly budget if in monthly view, or convert appropriately. 
+    // For simplicity, we just check against the displayed total if it's the tracked period.
+    // If budget is set and total > budget, warn.
+    if (budgetLimit > 0 && finalTotal > budgetLimit && costPeriod === 'monthly') {
+        costColor = "text-red-500";
+    }
+
+    totalDisplay.innerHTML = `${label}: <span class="text-2xl font-bold ${costColor}">$${finalTotal.toFixed(2)}</span>`;
     updateChart();
 };
 
@@ -282,6 +293,12 @@ const editItem = (i) => {
 rateInput.addEventListener('input', (e) => {
     kwhRate = parseFloat(e.target.value) || 0;
     save();
+});
+
+budgetInput.addEventListener('input', (e) => {
+    budgetLimit = parseFloat(e.target.value) || 0;
+    localStorage.setItem('energyWatcher_budget', budgetLimit);
+    render();
 });
 
 list.addEventListener('click', (e) => {

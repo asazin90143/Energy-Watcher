@@ -91,7 +91,14 @@
                 <section class="bg-white p-6 rounded-xl shadow-md border">
                     <h2 class="text-xl font-bold mb-4 text-center">Energy Analytics</h2>
                     <canvas id="energyChart"></canvas>
-                    <div id="totalCost" class="mt-6 text-center text-2xl font-bold text-gray-800">
+
+                    <div class="mt-4 flex flex-col items-center gap-2">
+                        <label class="text-sm text-gray-600 font-medium">Monthly Budget ($):</label>
+                        <input type="number" id="budgetInput" placeholder="50.00"
+                            class="border rounded px-2 py-1 w-24 text-center outline-blue-500">
+                    </div>
+
+                    <div id="totalCost" class="mt-4 text-center text-2xl font-bold text-gray-800">
                         Monthly Total: $0.00
                     </div>
                     <button id="periodBtn"
