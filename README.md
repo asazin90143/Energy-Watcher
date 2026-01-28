@@ -8,6 +8,8 @@ A lightweight, client-side web application to track, compute, and analyze househ
 - **Quick Add Presets:** Easily add common appliances with pre-defined wattages.
 - **Cost Engine:** Real-time calculation based on your local kWh rate.
 - **Budget Tracking:** Set a monthly budget and get visual alerts if you exceed it.
+- **CO2 Estimation:** Estimated carbon footprint based on usage.
+- **Smart Tips:** Context-aware energy saving advice.
 - **Analytics:** Visual breakdown of energy distribution using Chart.js.
 - **Data Persistence:** Automatically saves your data to your browser's local storage.
 
