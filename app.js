@@ -15,6 +15,7 @@ const totalDisplay = document.getElementById('totalCost');
 const co2Display = document.getElementById('co2Display');
 const presetSelect = document.getElementById('presetSelect');
 const budgetInput = document.getElementById('budgetInput');
+const tipDisplay = document.getElementById('energyTip');
 
 // New static elements
 const toggleBtn = document.getElementById('themeToggle');
@@ -205,6 +206,39 @@ const render = () => {
     co2Display.innerHTML = `🌱 Est. CO2: ${monthlyCO2.toFixed(1)} kg/mo`;
 
     updateChart();
+    updateTips();
+};
+
+const updateTips = () => {
+    if (appliances.length === 0) {
+        tipDisplay.innerText = "Add appliances to generate personalized saving tips!";
+        return;
+    }
+
+    // Find highest consumer
+    const highest = appliances.reduce((prev, current) => {
+        return (prev.wattage * prev.hours) > (current.wattage * current.hours) ? prev : current;
+    });
+
+    const consumption = highest.wattage * highest.hours; // Wh per day
+
+    if (consumption > 2000) {
+        tipDisplay.innerText = `Your ${highest.name} uses a lot of energy! Consider upgrading to a more efficient model or reducing usage time.`;
+    } else if (highest.hours > 8) {
+        tipDisplay.innerText = `Your ${highest.name} is on for long periods. Ensure it has an 'Eco' mode enabled if available.`;
+    } else if (highest.name.toLowerCase().includes('cond') || highest.name.toLowerCase().includes('ac')) {
+        tipDisplay.innerText = "For Air Conditioners, every degree higher in summer can save ~6% energy!";
+    } else if (highest.name.toLowerCase().includes('fridge')) {
+        tipDisplay.innerText = "Keep your Fridge full! Empty space wastes more energy to cool down air when opened.";
+    } else {
+        const genericTips = [
+            "Unplug electronics when not in use to stop 'vampire' energy drain.",
+            "LED bulbs use 75% less energy than incandescent lighting.",
+            "Using cold water for laundry can save significant heating costs.",
+            "Natural light is free! Open curtains instead of using lamps during the day."
+        ];
+        tipDisplay.innerText = genericTips[Math.floor(Math.random() * genericTips.length)];
+    }
 };
 
 const updateChart = () => {
