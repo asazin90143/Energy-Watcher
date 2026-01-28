@@ -12,6 +12,7 @@ const form = document.getElementById('applianceForm');
 const list = document.getElementById('applianceList');
 const rateInput = document.getElementById('kwhRate');
 const totalDisplay = document.getElementById('totalCost');
+const co2Display = document.getElementById('co2Display');
 const presetSelect = document.getElementById('presetSelect');
 const budgetInput = document.getElementById('budgetInput');
 
@@ -197,6 +198,12 @@ const render = () => {
     }
 
     totalDisplay.innerHTML = `${label}: <span class="text-2xl font-bold ${costColor}">$${finalTotal.toFixed(2)}</span>`;
+
+    // CO2 Calculation (Approx 0.4 kg per kWh)
+    const totalDailyKWh = appliances.reduce((acc, item) => acc + (item.wattage * item.hours / 1000), 0);
+    const monthlyCO2 = totalDailyKWh * 30 * 0.4;
+    co2Display.innerHTML = `🌱 Est. CO2: ${monthlyCO2.toFixed(1)} kg/mo`;
+
     updateChart();
 };
 
