@@ -1,0 +1,8 @@
+{
+  "name": "energy-watcher",
+  "version": "1.0.0",
+  "description": "Energy Watcher MVP",
+  "scripts": {
+    "dev": "npx serve ."
+  }
+}
