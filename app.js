@@ -12,16 +12,22 @@ const list = document.getElementById('applianceList');
 const rateInput = document.getElementById('kwhRate');
 const totalDisplay = document.getElementById('totalCost');
 
+// New static elements
+const toggleBtn = document.getElementById('themeToggle');
+const sortBtn = document.getElementById('sortBtn');
+const exportBtn = document.getElementById('exportBtn');
+const clearBtn = document.getElementById('clearBtn');
+const periodBtn = document.getElementById('periodBtn');
+
 // Initialize
 rateInput.value = kwhRate;
 
 // Theme Logic
-const toggleBtn = document.createElement('button');
 toggleBtn.onclick = () => {
     isDark = !isDark;
     applyTheme();
 };
-document.body.appendChild(toggleBtn);
+// document.body.appendChild(toggleBtn); // REMOVED
 
 const applyTheme = () => {
     const html = document.documentElement;
@@ -45,10 +51,7 @@ const applyTheme = () => {
 applyTheme();
 
 // Sort Logic
-const sortBtn = document.createElement('button');
-sortBtn.className = "mb-2 px-3 py-1 text-sm font-medium text-gray-600 bg-gray-100 rounded hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition float-right";
-sortBtn.innerText = "Sort: Default";
-
+// sortBtn created in HTML
 sortBtn.onclick = () => {
     if (sortOrder === 'original') {
         sortOrder = 'desc';
@@ -64,10 +67,7 @@ sortBtn.onclick = () => {
 };
 
 // Export Logic
-const exportBtn = document.createElement('button');
-exportBtn.className = "mb-2 mr-2 px-3 py-1 text-sm font-medium text-white bg-green-600 rounded hover:bg-green-700 transition float-right shadow-sm";
-exportBtn.innerText = "Export CSV";
-
+// exportBtn created in HTML
 exportBtn.onclick = () => {
     if (appliances.length === 0) {
         alert("No data to export!");
@@ -94,10 +94,7 @@ exportBtn.onclick = () => {
 };
 
 // Clear All Logic
-const clearBtn = document.createElement('button');
-clearBtn.className = "mb-2 mr-2 px-3 py-1 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition float-right shadow-sm";
-clearBtn.innerText = "Clear All";
-
+// clearBtn created in HTML
 clearBtn.onclick = () => {
     if (appliances.length === 0) return;
 
@@ -108,10 +105,7 @@ clearBtn.onclick = () => {
 };
 
 // Period Toggle Logic
-const periodBtn = document.createElement('button');
-periodBtn.className = "block mx-auto mt-2 text-xs font-medium text-gray-500 hover:text-blue-600 underline transition";
-periodBtn.innerText = "Switch to Weekly";
-
+// periodBtn created in HTML
 periodBtn.onclick = () => {
     if (costPeriod === 'monthly') {
         costPeriod = 'weekly';
@@ -123,17 +117,7 @@ periodBtn.onclick = () => {
     render();
 };
 
-const table = list.closest('table');
-if (table) {
-    // Insert button before the table
-    table.parentNode.insertBefore(sortBtn, table);
-    table.parentNode.insertBefore(exportBtn, table);
-    table.parentNode.insertBefore(clearBtn, table);
-}
-
-if (totalDisplay) {
-    totalDisplay.parentNode.insertBefore(periodBtn, totalDisplay.nextSibling);
-}
+// Insertion logic removed as elements are static
 
 const save = () => {
     localStorage.setItem('energyWatcher_data', JSON.stringify(appliances));
